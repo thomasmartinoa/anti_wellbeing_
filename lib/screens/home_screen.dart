@@ -1,7 +1,56 @@
 import 'package:flutter/material.dart';
+import '../service/usage_stats_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Duration? _screenTime;
+  int? _unlocks;
+  int? _appsUsed;
+  bool _loading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsageStats();
+  }
+
+  Future<void> _fetchUsageStats() async {
+    final usageService = UsageStatsService();
+    bool hasPerm = await usageService.hasPermission();
+    if (!hasPerm) {
+      hasPerm = await usageService.requestPermission();
+    }
+    if (!hasPerm) {
+      setState(() {
+        _error = 'Permission denied';
+        _loading = false;
+      });
+      return;
+    }
+    final duration = await usageService.getTodayScreenTime();
+    final unlocks = await usageService.getTodayUnlocks();
+    final appsUsed = await usageService.getTodayAppsUsed();
+    setState(() {
+      _screenTime = duration;
+      _unlocks = unlocks;
+      _appsUsed = appsUsed;
+      _loading = false;
+    });
+  }
+
+  String _formatDuration(Duration d) {
+    if (d == Duration.zero) return '0m';
+    final h = d.inHours;
+    final m = d.inMinutes % 60;
+    return h > 0 ? '${h}h ${m}m' : '${m}m';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +94,21 @@ class HomeScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        '4h 20m',
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.primary,
-                        ),
-                      ),
+                      _loading
+                          ? const CircularProgressIndicator()
+                          : _error != null
+                          ? Text(
+                              _error!,
+                              style: TextStyle(color: colorScheme.error),
+                            )
+                          : Text(
+                              _formatDuration(_screenTime ?? Duration.zero),
+                              style: TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.primary,
+                              ),
+                            ),
                       const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -88,13 +144,13 @@ class HomeScreen extends StatelessWidget {
                   _StatCard(
                     icon: Icons.phone_android,
                     label: 'Unlocks',
-                    value: '27',
+                    value: _loading ? '-' : (_unlocks?.toString() ?? '-'),
                     color: colorScheme.secondary,
                   ),
                   _StatCard(
                     icon: Icons.apps,
                     label: 'Apps Used',
-                    value: '12',
+                    value: _loading ? '-' : (_appsUsed?.toString() ?? '-'),
                     color: colorScheme.tertiary,
                   ),
                   _StatCard(
