@@ -31,6 +31,27 @@ Future<int> getTodayAppsUsed() async {
 }
 
 class UsageStatsService {
+  Future<Map<String, Duration>> getTodayAppScreenTimes() async {
+    final now = DateTime.now();
+    final start = DateTime(now.year, now.month, now.day);
+    final end = now;
+    final stats = await UsageStats.queryUsageStats(start, end);
+    final Map<String, Duration> appTimes = {};
+    for (final stat in stats) {
+      final pkg = stat.packageName;
+      if (pkg == null) continue;
+      final time = Duration(
+        milliseconds: int.tryParse(stat.totalTimeInForeground ?? '0') ?? 0,
+      );
+      if (appTimes.containsKey(pkg)) {
+        appTimes[pkg] = appTimes[pkg]! + time;
+      } else {
+        appTimes[pkg] = time;
+      }
+    }
+    return appTimes;
+  }
+
   Future<int> getTodayUnlocks() async {
     try {
       final now = DateTime.now();

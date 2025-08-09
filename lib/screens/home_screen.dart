@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../service/usage_stats_service.dart';
 import 'package:battery_plus/battery_plus.dart';
+import 'package:device_apps/device_apps.dart';
 
 var battery = Battery();
 
@@ -23,12 +24,15 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _batteryLevel;
   bool _loading = true;
   String? _error;
+  Map<String, Duration>? _appScreenTimes;
+  Map<String, Application>? _appInfoCache;
 
   @override
   void initState() {
     super.initState();
     _checkAndRequestPermission();
     _fetchBatteryLevel();
+    _fetchAppScreenTimes();
   }
 
   Future<void> _fetchBatteryLevel() async {
@@ -36,6 +40,23 @@ class _HomeScreenState extends State<HomeScreen> {
     if (mounted) {
       setState(() {
         _batteryLevel = level;
+      });
+    }
+  }
+
+  Future<void> _fetchAppScreenTimes() async {
+    final usageService = UsageStatsService();
+    final appTimes = await usageService.getTodayAppScreenTimes();
+    // Fetch app info for each package
+    final Map<String, Application> appInfoCache = {};
+    for (final pkg in appTimes.keys) {
+      final app = await DeviceApps.getApp(pkg, true);
+      if (app != null) appInfoCache[pkg] = app;
+    }
+    if (mounted) {
+      setState(() {
+        _appScreenTimes = appTimes;
+        _appInfoCache = appInfoCache;
       });
     }
   }
@@ -209,6 +230,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
+              const SizedBox(height: 32),
+              Text(
+                'App Usage Breakdown',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 12),
+              _appScreenTimes == null
+                  ? const CircularProgressIndicator()
+                  : _appScreenTimes!.isEmpty
+                  ? const Text('No app usage data available.')
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _appScreenTimes!.length,
+                      itemBuilder: (context, index) {
+                        final sortedEntries = _appScreenTimes!.entries.toList()
+                          ..sort((a, b) => b.value.compareTo(a.value));
+                        final entry = sortedEntries[index];
+                        final pkg = entry.key;
+                        final dur = entry.value;
+                        final app = _appInfoCache != null
+                            ? _appInfoCache![pkg]
+                            : null;
+                        return ListTile(
+                          leading: app is ApplicationWithIcon
+                              ? Image.memory(app.icon, width: 32, height: 32)
+                              : const Icon(Icons.apps),
+                          title: Text(app?.appName ?? pkg),
+                          subtitle: app != null ? Text(pkg) : null,
+                          trailing: Text(_formatDuration(dur)),
+                        );
+                      },
+                    ),
             ],
           ),
         ),

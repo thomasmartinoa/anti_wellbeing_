@@ -7,6 +7,7 @@ environment:
   sdk: ^3.8.1
 
 dependencies:
+  device_apps: ^2.2.0
   flutter:
     sdk: flutter
   usage_stats: ^1.2.0
