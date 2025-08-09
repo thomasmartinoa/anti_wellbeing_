@@ -8,7 +8,8 @@ plugins {
 android {
     namespace = "com.example.anti_wellbeing"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 34
+    ndkVersion = "27.0.12077973"
     
 
     compileOptions {
@@ -29,7 +30,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        minSdkVersion(23)
+        minSdk = 23
+        targetSdk = 34
     }
 
     buildTypes {
