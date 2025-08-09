@@ -18,6 +18,35 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _checkAndRequestPermission();
+  }
+
+  Future<void> _checkAndRequestPermission() async {
+    final usageService = UsageStatsService();
+    bool hasPerm = await usageService.hasPermission();
+    if (!hasPerm) {
+      if (mounted) {
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: const Text('Permission Required'),
+            content: const Text(
+              'Screen King needs Usage Access Permission to track your screen time and app usage. Please grant it in the next screen.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  await usageService.requestPermission();
+                  if (mounted) Navigator.of(context).pop();
+                },
+                child: const Text('Grant Permission'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
     _fetchUsageStats();
   }
 
