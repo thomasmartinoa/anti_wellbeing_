@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TasksScreen extends StatelessWidget {
+  const TasksScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -39,7 +41,7 @@ class TasksScreen extends StatelessWidget {
             ),
             _ChallengeTile(
               icon: Icons.games,
-              title: 'Use instagram for 2',
+              title: 'Use instagram for 2 hours',
               progress: 0.2,
               color: Colors.blueAccent,
             ),

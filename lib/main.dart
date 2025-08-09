@@ -33,8 +33,6 @@ class ScreenKingApp extends StatelessWidget {
       onSecondary: onSecondary,
       error: error,
       onError: Colors.white,
-      background: background,
-      onBackground: onBackground,
       surface: surface,
       onSurface: onSurface,
     );
