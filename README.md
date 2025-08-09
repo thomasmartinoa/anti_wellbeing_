@@ -5,7 +5,7 @@
 
 
 ## Basic Details
-### Team Name: Only CHAKKA fans
+### Team Name:Only CHAKKA fans
 
 
 ### Team Members
