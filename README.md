@@ -1,47 +1,51 @@
 <img width="3188" height="1202" alt="frame (3)" src="https://github.com/user-attachments/assets/517ad8e9-ad22-457d-9538-a9e62d137cd7" />
 
 
-# [Project Name] 🎯
+# Screen King 🎯
 
 
 ## Basic Details
-### Team Name: [Name]
+### Team Name: Only CHAKKA fans
 
 
 ### Team Members
-- Team Lead: [Name] - [College]
-- Member 2: [Name] - [College]
-- Member 3: [Name] - [College]
+
+- Team Lead: Thomas Martin - College of Engineering, Kallooppara
+- Member 2: Vachan S Panicker - College of Engineering, Kallooppara
 
 ### Project Description
-[2-3 lines about what your project does]
+
+Basically, this app is designed to reward you for wasting time on your smartphone...
+- It is the opposite to digital wellbeing
 
 ### The Problem (that doesn't exist)
-[What ridiculous problem are you solving?]
+
+People keep trying to reduce their smartphone usage, but some of us want to embrace the chaos! There’s no app out there that rewards you for spending more time on your phone, browsing memes, watching cat videos, or scrolling endlessly.
 
 ### The Solution (that nobody asked for)
-[How are you solving it? Keep it fun!]
+
+- Screen King rewards you for your epic dedication to phone usage. The more time you spend, the more points you earn! 
 
 ## Technical Details
 ### Technologies/Components Used
 For Software:
-- [Languages used]
-- [Frameworks used]
-- [Libraries used]
-- [Tools used]
+- Dart
+- Flutter
+- GitHub Copilot, ChatGPt
 
 For Hardware:
-- [List main components]
-- [List specifications]
-- [List tools required]
+- Thomas's Phone
+- Our Laptops
 
 ### Implementation
 For Software:
 # Installation
-[commands]
+1. `git clone https://github.com/thomasmartinoa/anti_wellbeing_`
+2. `cd anti_wellbeing_`
+3. `flutter pub get`
 
 # Run
-[commands]
+`flutter run`
 
 ### Project Documentation
 For Software:
@@ -55,19 +59,6 @@ For Software:
 
 ![Screenshot3](Add screenshot 3 here with proper name)
 *Add caption explaining what this shows*
-
-# Diagrams
-![Workflow](Add your workflow/architecture diagram here)
-*Add caption explaining your workflow*
-
-For Hardware:
-
-# Schematic & Circuit
-![Circuit](Add your circuit diagram here)
-*Add caption explaining connections*
-
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
 
 # Build Photos
 ![Components](Add photo of your components here)
