@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "69530535913",
+    "project_id": "antiwellbeing",
+    "storage_bucket": "antiwellbeing.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69530535913:android:643712801f4c26d30a6d78",
+        "android_client_info": {
+          "package_name": "com.example.anti_wellbeing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69530535913-p4toa4b61qbm2u2t1brqqdik0ufg9uon.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_kr5q2Xd5SzF4ETW_xVixEhmun50Z8pA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69530535913-p4toa4b61qbm2u2t1brqqdik0ufg9uon.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "69530535913-6nv6r7ee2tnfbk9f88honmh83b94p67a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.antiWellbeing"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

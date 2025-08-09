@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'service/auth_service.dart';
 import 'screens/home_screen.dart';
 import 'screens/tasks_screen.dart';
 import 'screens/leaderboard_screen.dart';
 import 'screens/profile_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ScreenKingApp());
 }
 
@@ -18,11 +24,9 @@ class ScreenKingApp extends StatelessWidget {
     const surface = Color(0xFF24283B);
     const primary = Color(0xFF7AA2F7);
     const secondary = Color(0xFFBB9AF7);
-    const accent = Color(0xFF9ECE6A);
     const error = Color(0xFFF7768E);
     const onPrimary = Color(0xFF1A1B26);
     const onSurface = Color(0xFFC0CAF5);
-    const onBackground = Color(0xFFC0CAF5);
     const onSecondary = Color(0xFF1A1B26);
 
     final tokyoNightColorScheme = ColorScheme(
@@ -33,8 +37,6 @@ class ScreenKingApp extends StatelessWidget {
       onSecondary: onSecondary,
       error: error,
       onError: Colors.white,
-      background: background,
-      onBackground: onBackground,
       surface: surface,
       onSurface: onSurface,
     );
@@ -93,7 +95,89 @@ class ScreenKingApp extends StatelessWidget {
         iconTheme: const IconThemeData(color: primary),
       ),
       themeMode: ThemeMode.dark,
-      home: const MainNavigation(),
+      home: const AuthGate(),
+    );
+  }
+}
+
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+  @override
+  Widget build(BuildContext context) {
+    final authService = AuthService();
+    return StreamBuilder<User?>(
+      stream: authService.authStateChanges,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasData) {
+          return const MainNavigation();
+        }
+        return SignInScreen(authService: authService);
+      },
+    );
+  }
+}
+
+class SignInScreen extends StatelessWidget {
+  final AuthService authService;
+  const SignInScreen({super.key, required this.authService});
+
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    try {
+      await authService.signInWithGoogle();
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Sign in failed: $e')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Scaffold(
+      backgroundColor: colorScheme.background,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.emoji_events, color: colorScheme.primary, size: 64),
+            const SizedBox(height: 24),
+            Text(
+              'Screen King',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              icon: const Icon(Icons.login),
+              label: const Text(
+                'Sign in with Google',
+                style: TextStyle(fontSize: 18),
+              ),
+              onPressed: () => _signInWithGoogle(context),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
