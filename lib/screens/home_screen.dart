@@ -10,16 +10,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Duration? _screenTime;
+  int? _unlocks;
+  int? _appsUsed;
   bool _loading = true;
   String? _error;
 
   @override
   void initState() {
     super.initState();
-    _fetchScreenTime();
+    _fetchUsageStats();
   }
 
-  Future<void> _fetchScreenTime() async {
+  Future<void> _fetchUsageStats() async {
     final usageService = UsageStatsService();
     bool hasPerm = await usageService.hasPermission();
     if (!hasPerm) {
@@ -33,8 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
     final duration = await usageService.getTodayScreenTime();
+    final unlocks = await usageService.getTodayUnlocks();
+    final appsUsed = await usageService.getTodayAppsUsed();
     setState(() {
       _screenTime = duration;
+      _unlocks = unlocks;
+      _appsUsed = appsUsed;
       _loading = false;
     });
   }
@@ -138,13 +144,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   _StatCard(
                     icon: Icons.phone_android,
                     label: 'Unlocks',
-                    value: '27',
+                    value: _loading ? '-' : (_unlocks?.toString() ?? '-'),
                     color: colorScheme.secondary,
                   ),
                   _StatCard(
                     icon: Icons.apps,
                     label: 'Apps Used',
-                    value: '12',
+                    value: _loading ? '-' : (_appsUsed?.toString() ?? '-'),
                     color: colorScheme.tertiary,
                   ),
                   _StatCard(
