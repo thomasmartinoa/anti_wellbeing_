@@ -13,29 +13,86 @@ class ScreenKingApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Tokyo Night color palette
+    const background = Color(0xFF1A1B26);
+    const surface = Color(0xFF24283B);
+    const primary = Color(0xFF7AA2F7);
+    const secondary = Color(0xFFBB9AF7);
+    const accent = Color(0xFF9ECE6A);
+    const error = Color(0xFFF7768E);
+    const onPrimary = Color(0xFF1A1B26);
+    const onSurface = Color(0xFFC0CAF5);
+    const onBackground = Color(0xFFC0CAF5);
+    const onSecondary = Color(0xFF1A1B26);
+
+    final tokyoNightColorScheme = ColorScheme(
+      brightness: Brightness.dark,
+      primary: primary,
+      onPrimary: onPrimary,
+      secondary: secondary,
+      onSecondary: onSecondary,
+      error: error,
+      onError: Colors.white,
+      background: background,
+      onBackground: onBackground,
+      surface: surface,
+      onSurface: onSurface,
+    );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Screen King',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.amber,
-          brightness: Brightness.light,
-        ),
+        colorScheme: tokyoNightColorScheme,
         useMaterial3: true,
         fontFamily: 'Roboto',
-        scaffoldBackgroundColor: const Color(0xFFF8F9FA),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black87,
+        scaffoldBackgroundColor: background,
+        appBarTheme: AppBarTheme(
+          backgroundColor: surface,
+          foregroundColor: onSurface,
           elevation: 0.5,
+          iconTheme: IconThemeData(color: primary),
         ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          selectedItemColor: Colors.amber,
-          unselectedItemColor: Colors.grey,
-          backgroundColor: Colors.white,
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          selectedItemColor: primary,
+          unselectedItemColor: onSurface.withOpacity(0.5),
+          backgroundColor: surface,
           showUnselectedLabels: true,
         ),
+        cardColor: surface,
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: onSurface),
+          bodyMedium: TextStyle(color: onSurface),
+          bodySmall: TextStyle(color: onSurface),
+        ),
+        iconTheme: const IconThemeData(color: primary),
       ),
+      darkTheme: ThemeData(
+        colorScheme: tokyoNightColorScheme,
+        useMaterial3: true,
+        fontFamily: 'Roboto',
+        scaffoldBackgroundColor: background,
+        appBarTheme: AppBarTheme(
+          backgroundColor: surface,
+          foregroundColor: onSurface,
+          elevation: 0.5,
+          iconTheme: IconThemeData(color: primary),
+        ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          selectedItemColor: primary,
+          unselectedItemColor: onSurface.withOpacity(0.5),
+          backgroundColor: surface,
+          showUnselectedLabels: true,
+        ),
+        cardColor: surface,
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: onSurface),
+          bodyMedium: TextStyle(color: onSurface),
+          bodySmall: TextStyle(color: onSurface),
+        ),
+        iconTheme: const IconThemeData(color: primary),
+      ),
+      themeMode: ThemeMode.dark,
       home: const MainNavigation(),
     );
   }
