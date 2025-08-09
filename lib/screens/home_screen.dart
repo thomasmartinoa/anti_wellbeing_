@@ -4,6 +4,11 @@ import 'package:battery_plus/battery_plus.dart';
 
 var battery = Battery();
 
+Future<String> getBatteryLevel() async {
+  final level = await battery.batteryLevel;
+  return '$level%';
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -15,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Duration? _screenTime;
   int? _unlocks;
   int? _appsUsed;
+  String? _batteryLevel;
   bool _loading = true;
   String? _error;
 
@@ -22,6 +28,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _checkAndRequestPermission();
+    _fetchBatteryLevel();
+  }
+
+  Future<void> _fetchBatteryLevel() async {
+    final level = await getBatteryLevel();
+    if (mounted) {
+      setState(() {
+        _batteryLevel = level;
+      });
+    }
   }
 
   Future<void> _checkAndRequestPermission() async {
@@ -188,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   _StatCard(
                     icon: Icons.battery_charging_full,
                     label: 'Battery',
-                    value: await batter.batteryLevel,
+                    value: _batteryLevel ?? '-',
                     color: Colors.green,
                   ),
                 ],
