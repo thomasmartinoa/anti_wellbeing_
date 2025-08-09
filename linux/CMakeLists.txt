@@ -69,23 +69,31 @@ set_target_properties(${BINARY_NAME}
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/intermediates_do_not_run"
 )
 
-
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
-
 # === Installation ===
 # By default, "installing" just makes a relocatable bundle in the build
 # directory.
-set(BUILD_BUNDLE_DIR "${PROJECT_BINARY_DIR}/bundle")
+
+# Fix 1: Set the installation prefix to a user-writable directory.
+# This prevents the "Permission denied" error when installing to a system directory.
+set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/bundle" CACHE PATH "Installation prefix" FORCE)
+
+# Fix 2: Tell the Flutter tool the correct path to the executable.
+# This fixes the "Unable to start executable" error.
+set(FLUTTER_EXECUTABLE "${CMAKE_INSTALL_PREFIX}/${BINARY_NAME}")
+
+# The original if() block is now redundant, but kept for context.
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  # This line is now redundant because of the fix above, but we'll leave it.
   set(CMAKE_INSTALL_PREFIX "${BUILD_BUNDLE_DIR}" CACHE PATH "..." FORCE)
 endif()
 
 # Start with a clean build bundle directory every time.
 install(CODE "
-  file(REMOVE_RECURSE \"${BUILD_BUNDLE_DIR}/\")
+  file(REMOVE_RECURSE \"${CMAKE_INSTALL_PREFIX}/\")
   " COMPONENT Runtime)
 
 set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")

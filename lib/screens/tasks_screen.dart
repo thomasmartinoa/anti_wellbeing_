@@ -41,7 +41,7 @@ class TasksScreen extends StatelessWidget {
             ),
             _ChallengeTile(
               icon: Icons.games,
-              title: 'Use instagram for 2',
+              title: 'Use instagram for 2 hours',
               progress: 0.2,
               color: Colors.blueAccent,
             ),
